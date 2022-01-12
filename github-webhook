@@ -1,0 +1,55 @@
+###Jenkins Webhook Triger 
+First Create new Item, with pipe line 
+Then tick mark " GitHub hook trigger for GITScm polling? " under the "Build Triggers"
+Then under "Pipeline" portion , "Pipeline Script" paste bellow file.
+
+
+~~~
+pipeline {
+  environment {
+    registry = "gobindacpi/mywebsite"
+    registryCredential = 'docker-hub'
+    dockerImage = ''
+  }
+  agent any
+  stages {
+    stage('Cloning Git') {
+      steps {
+        git 'https://github.com/gobindacpi/mywebsite.git'
+      }
+    }
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+       stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
+      }
+    }
+  }
+}
+~~~
+
+
+##From Git Hub site.
+##go to project url:https://github.com/gobindacpi/mywebsite
+##then settings > webhooks > addwebhooks > http://36.255.x.x:8082/github-webhook/ 
+## Content Type "application/JSON" and save.
+
+
+
+
+
