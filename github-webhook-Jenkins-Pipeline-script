@@ -5,7 +5,6 @@ Then tick mark " GitHub hook trigger for GITScm polling? " under the "Build Trig
 Then under "Pipeline" portion , "Pipeline Script" paste bellow file.
 
 
-~~~
 pipeline {
   environment {
     registry = "gobindacpi/mywebsite"
@@ -35,15 +34,18 @@ pipeline {
         }
       }
     }
-       stage('Remove Unused docker image') {
+      stage('Run docker image') {
       steps{
-        sh "docker rmi $registry:$BUILD_NUMBER"
+        sh "docker run --name brilliant -p 80:80 -d $registry:$BUILD_NUMBER"
       }
     }
+       #stage('Remove Unused docker image') {
+      #steps{
+       # sh "docker rmi $registry:$BUILD_NUMBER"
+      #}
+    #}
   }
 }
-~~~
-
 
 ##From Git Hub site.
 ##go to project url:https://github.com/gobindacpi/mywebsite
