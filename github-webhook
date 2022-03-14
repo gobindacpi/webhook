@@ -1,4 +1,5 @@
 ###Jenkins Webhook Triger 
+Install Docker Plugin: "Docker pipeline"
 First Create new Item, with pipe line 
 Then tick mark " GitHub hook trigger for GITScm polling? " under the "Build Triggers"
 Then under "Pipeline" portion , "Pipeline Script" paste bellow file.
